@@ -6,121 +6,79 @@ import { TxButton } from './substrate-lib/components';
 
 import KittyCards from './KittyCards';
 
-/*
-React hook to update the state of our other components.
-*/
-
-// Construct a Kitty ID from storage key
-// helps construct a Kitty ID from its storage key
-const convertToKittyHash = entry =>
-`0x${entry[0].toJSON().slice(-64)}`;
-
-// Construct a Kitty object
-// is a function to hold all Kitty objects
-const constructKitty = (hash, { dna, price, gender, owner }) => ({
-    id: hash,
-    dna,
-    price: price.toJSON(),
-    gender: gender.toJSON(),
-    owner: owner.toJSON()
+const parseKitty = ({ dna, price, gender, owner }) => ({
+  dna,
+  price: price.toJSON(),
+  gender: gender.toJSON(),
+  owner: owner.toJSON()
 });
 
-// Subscription function for setting Kitty IDs
-const subscribeKittyCnt = () => {
-    let unsub = null
-  
-    const asyncFetch = async () => {
-      // Query KittyCnt from runtime
-      unsub = await api.query.substrateKitties.kittyCnt(async cnt => {
-        // Fetch all Kitty objects using entries()
-        const entries = await api.query.substrateKitties.kitties.entries()
-        // Retrieve only the Kitty ID and set to state
-        const hashes = entries.map(convertToKittyHash)
-        setKittyHashes(hashes)
-      })
-    }
-  
-    asyncFetch()
-  
-    // return the unsubscription cleanup function
-    return () => {
-      unsub && unsub()
-    }
-}
-
-const asyncFetch = async () => {
-    unsub = await api.query.substrateKitties.kitties.kittyCnt(async cnt => {
-      // Fetch all kitty keys
-      const entries =
-        await api.query.substrateKitties.kitties.kitties.entries()
-      const hashes = entries.map(convertToKittyHash)
-      setKittyHashes(hashes)
-    })
-
-    // return the unsubscription cleanup function
-    return () => {
-      unsub && unsub();
-    };
-}
-
-// Subscription function to construct a Kitty object
-const subscribeKitties = () => {
-    let unsub = null
-  
-    const asyncFetch = async () => {
-      // Get Kitty objects from storage
-      unsub = await api.query.substrateKitties.kitties.multi(kittyHashes, kitties => {
-        // Create an array of Kitty objects from `constructKitty`
-        const kittyArr = kitties.map((kitty, ind) =>
-          constructKitty(kittyHashes[ind], kitty.value)
-        )
-        // Set the array of Kitty objects to state
-        setKitties(kittyArr)
-      })
-    }
-  
-    asyncFetch()
-  
-    // return the unsubscription cleanup function
-    return () => {
-      unsub && unsub()
-    }
-}
-
-
-// Use React hooks
-// enables us to subscribe to chain storage item 
-// changes and use the `useEffect`
 export default function Kitties (props) {
   const { api, keyring } = useSubstrate();
   const { accountPair } = props;
 
+  const [kittyIds, setKittyIds] = useState([]);
   const [kitties, setKitties] = useState([]);
-  const [kittyHashes, setKittyHashes] = useState([]);
   const [status, setStatus] = useState('');
 
-  useEffect(subscribeKittyCnt, [api, keyring])
-  useEffect(subscribeKitties, [api, kittyHashes])
+  const subscribeCount = () => {
+    let unsub = null;
 
-  
+    const asyncFetch = async () => {
+      unsub = await api.query.substrateKitties.countForKitties(async count => {
+        // Fetch all kitty keys
+        const entries = await api.query.substrateKitties.kitties.entries();
+        const ids = entries.map(entry => entry[1].unwrap().dna);
+        setKittyIds(ids);
+      });
+    };
+
+    asyncFetch();
+
+    return () => {
+      unsub && unsub();
+    };
+  };
+
+  const subscribeKitties = () => {
+    let unsub = null;
+
+    const asyncFetch = async () => {
+      unsub = await api.query.substrateKitties.kitties.multi(kittyIds, kitties => {
+        const kittiesMap = kitties.map(kitty => parseKitty(kitty.unwrap()));
+        setKitties(kittiesMap);
+      });
+    };
+
+    asyncFetch();
+
+    return () => {
+      unsub && unsub();
+    };
+  };
+
+  useEffect(subscribeCount, [api, keyring]);
+  useEffect(subscribeKitties, [api, keyring, kittyIds]);
+
   return <Grid.Column width={16}>
     <h1>Kitties</h1>
-    
-    <KittyCards kitties={kitties} accountPair={accountPair} setStatus={setStatus}/>
+    <KittyCards kitties={kitties} accountPair={accountPair} setStatus={setStatus} />
     <Form style={{ margin: '1em 0' }}>
-        <Form.Field style={{ textAlign: 'center' }}>
-            <TxButton
-            accountPair={accountPair} label='Create Kitty' type='SIGNED-TX' setStatus={setStatus}
-            attrs={{
-                palletRpc: 'substrateKitties',
-                callable: 'createKitty',
-                inputParams: [],
-                paramFields: []
-            }}
-            />
-        </Form.Field>
-        </Form>
-        <div style={{ overflowWrap: 'break-word' }}>{status}</div>
-    </Grid.Column>;
+      <Form.Field style={{ textAlign: 'center' }}>
+        <TxButton
+          accountPair={accountPair}
+          label='Create Kitty'
+          type='SIGNED-TX'
+          setStatus={setStatus}
+          attrs={{
+            palletRpc: 'substrateKitties',
+            callable: 'createKitty',
+            inputParams: [],
+            paramFields: []
+          }}
+        />
+      </Form.Field>
+    </Form>
+    <div style={{ overflowWrap: 'break-word' }}>{status}</div>
+  </Grid.Column>;
 }
-
