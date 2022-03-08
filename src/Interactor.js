@@ -44,6 +44,8 @@ function Main (props) {
     const palletRPCs = Object.keys(apiType).sort()
       .filter(pr => Object.keys(apiType[pr]).length > 0)
       .map(pr => ({ key: pr, value: pr, text: pr }));
+
+    console.log('palletRPCs: ' + palletRPCs);
     setPalletRPCs(palletRPCs);
   };
 
@@ -51,11 +53,14 @@ function Main (props) {
     if (!api || palletRpc === '') { return; }
     const callables = Object.keys(getApiType(api, interxType)[palletRpc]).sort()
       .map(c => ({ key: c, value: c, text: c }));
+    
+    console.log('callables: ' + callables);
     setCallables(callables);
   };
 
   const updateParamFields = () => {
     if (!api || palletRpc === '' || callable === '') {
+
       setParamFields([]);
       return;
     }
@@ -83,6 +88,7 @@ function Main (props) {
           optional: false
         }];
       }
+      console.log('name=' + paramFields[0].name + ', type=' + paramFields[0].type + ', optional=' + paramFields[0].optional);
     } else if (interxType === 'EXTRINSIC') {
       const metaArgs = api.tx[palletRpc][callable].meta.args;
 
@@ -111,6 +117,7 @@ function Main (props) {
       paramFields = [];
     }
 
+    console.log('paramFields=' + paramFields);
     setParamFields(paramFields);
   };
 

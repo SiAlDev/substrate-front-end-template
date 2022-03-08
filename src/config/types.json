@@ -1,11 +1,10 @@
 {
-    "Gender": {
-      "_enum": ["Male", "Female"]
-    },
-    "Kitty": {
-      "dna": "[u8; 16]",
-      "price": "Option<Balance>",
-      "gender": "Gender",
-      "owner": "AccountId"
+    "Collection": {
+      "issuer": "AccountId",
+      "metadata": "BoundedString",
+      "max": "[u32]",
+      "symbol": "BoundedString",
+      "nfts_count": "[u32]"
     }
-  }
+}
+
