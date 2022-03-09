@@ -4,7 +4,7 @@
       "metadata": "BoundedString",
       "max": "[u32]",
       "symbol": "BoundedString",
-      "nfts_count": "[u32]"
+      "nfts_Count": "[u32]"
     }
 }
 

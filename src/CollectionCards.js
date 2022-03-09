@@ -131,11 +131,14 @@ const BuyCollection = props => {
 };
 
 // --- About Collection Card ---
-
 const CollectionCard = props => {
   const { collection, accountPair, setStatus } = props;
-  const { dna = null, owner = null, gender = null, price = null } = collection;
-  const displayDna = "dna && dna.toJSON()";
+  const { issuer = issuer, 
+          metadata = metadata, 
+          max = max, 
+          symbol = symbol,
+          nftsCount = nftsCount } = collection;
+  const displayCollectionTitle = JSON.stringify(symbol);
   const isSelf = accountPair.address === collection.issuer;
 
   return <Card>
@@ -143,17 +146,20 @@ const CollectionCard = props => {
     {/* <CollectionAvatar dna={dna.toU8a()} /> */}
     <Card.Content>
       <Card.Meta style={{ fontSize: '.9em', overflowWrap: 'break-word' }}>
-        DNA: {displayDna}
+        Symbol: {displayCollectionTitle}
       </Card.Meta>
       <Card.Description>
         <p style={{ overflowWrap: 'break-word' }}>
-          {/* Gender: {gender} */}
+          Issuer: {issuer}
         </p>
         <p style={{ overflowWrap: 'break-word' }}>
-          {/* Owner: {owner} */}
+          Metadata: {metadata}
         </p>
         <p style={{ overflowWrap: 'break-word' }}>
-          {/* Price: {price || 'Not For Sale'} */}
+          Max: {max}
+        </p>
+        <p style={{ overflowWrap: 'break-word' }}>
+          NFTs count: {nftsCount || 'No NFT'}
         </p>
       </Card.Description>
     </Card.Content>

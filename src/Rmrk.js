@@ -6,12 +6,12 @@ import { TxButton } from './substrate-lib/components';
 
 import CollectionCards from './CollectionCards';
 
-const parseCollection = ({ issuer, metadata, max, symbol, nfts_count }) => ({
-  issuer: issuer,
-  metadata: metadata,
-  max: max,
-  symbol: symbol,
-  nfts_count: nfts_count
+const parseCollection = ({ issuer, metadata, max, symbol, nftsCount }) => ({
+  issuer: issuer.toJSON(),
+  metadata: metadata.toJSON(),
+  max: max.toJSON(),
+  symbol: String.fromCharCode(...symbol),
+  nftsCount: nftsCount.toJSON()
 });
 
 function dumpObject (obj) {
