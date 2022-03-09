@@ -6,27 +6,20 @@ import { TxButton } from './substrate-lib/components';
 
 import CollectionCards from './CollectionCards';
 
-const parseCollection = ({ issuer, metadata, max, symbol, nfts_count}) => ({
-  issuer,
+const parseCollection = ({ issuer, metadata, max, symbol, nfts_count }) => ({
+  issuer: issuer,
   metadata: metadata,
   max: max,
   symbol: symbol,
   nfts_count: nfts_count
 });
 
-// .toJSON()
-// "issuer": "AccountId",
-//       "metadata": "BoundedString",
-//       "max": "[u32]",
-//       "symbol": "BoundedString",
-//       "nfts_count": "[u32]"
-
 function dumpObject (obj) {
-  var output, property;
-  output = '';
+  let output = '';
+  let property;
+
   for (property in obj) {
-      
-      output += 'property=' + property + ': obj=' + obj[property] + '; ---  ';
+    output += 'property=' + property + ': obj=' + obj[property] + '; ---  ';
   }
   console.log(output);
 }
@@ -36,7 +29,7 @@ export default function Collections (props) {
   const { accountPair } = props;
 
   const [collectionIds, setCollectionIds] = useState([]);
-  const [collections, setCollections] = useState([]);
+  const [collectionsMapFinal, setCollectionsMapFinal] = useState([]);
   const [status, setStatus] = useState('');
 
   const subscribeCountCollections = () => {
@@ -80,15 +73,14 @@ export default function Collections (props) {
     const asyncFetch = async () => {
       console.log('collectionIds=' + collectionIds);
 
-      unsub = await api.query.rmrkCore.collections.multi(collectionIds, collections => {
+      unsub = await api.query.rmrkCore.collections.entries(collections => {
         console.log('after await, in  -- StorageEntryPromiseMulti, collections=' + JSON.stringify(collections.value));
 
-        if (collections.value != null) {
-          const collectionsMap = collections.map(collection => parseCollection(collection.unwrap()));
-          setCollections(collectionsMap);
+        if (collections.length != 0) {
+          const collectionsMap = collections.map(collection => parseCollection(collection[1].unwrap()));
+          setCollectionsMapFinal(collectionsMap);
         }
       });
-
       //get values of each property in the collection
       //const ids = entries.map(entry => entry[1].unwrap().metadata);
 
@@ -106,7 +98,7 @@ export default function Collections (props) {
 
   return <Grid.Column width={16}>
     <h1>Collections</h1>
-    <CollectionCards collections={collections} accountPair={accountPair} setStatus={setStatus} />
+    <CollectionCards collections={collectionsMapFinal} accountPair={accountPair} setStatus={setStatus} />
     <Form style={{ margin: '1em 0' }}>
       <Form.Field style={{ textAlign: 'center' }}>
         <TxButton

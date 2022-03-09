@@ -25,7 +25,7 @@ const TransferModal = props => {
     trigger={<Button basic color='blue'>Transfer</Button>}>
     <Modal.Header>Collection Transfer</Modal.Header>
     <Modal.Content><Form>
-      <Form.Input fluid label='Collection ID' readOnly value={colletion.symbol} />
+      <Form.Input fluid label='Collection ID' readOnly value={collection.symbol} />
       <Form.Input fluid label='Receiver' placeholder='Receiver Address' onChange={formChange('target')} />
     </Form></Modal.Content>
     <Modal.Actions>
@@ -39,7 +39,7 @@ const TransferModal = props => {
         attrs={{
           palletRpc: 'substrateKitties',
           callable: 'transfer',
-          inputParams: [formValue.target, colletion.symbol],
+          inputParams: [formValue.target, collection.symbol],
           paramFields: [true, true]
         }}
       />
@@ -67,7 +67,7 @@ const SetPrice = props => {
     trigger={<Button basic color='blue'>Set Price</Button>}>
     <Modal.Header>Set Collection Price</Modal.Header>
     <Modal.Content><Form>
-      <Form.Input fluid label='Collection ID' readOnly value={colletion.symbol} />
+      <Form.Input fluid label='Collection ID' readOnly value={collection.symbol} />
       <Form.Input fluid label='Price' placeholder='Enter Price' onChange={formChange('target')} />
     </Form></Modal.Content>
     <Modal.Actions>
@@ -81,7 +81,7 @@ const SetPrice = props => {
         attrs={{
           palletRpc: 'substrateKitties',
           callable: 'setPrice',
-          inputParams: [colletion.symbol, formValue.target],
+          inputParams: [collection.symbol, formValue.target],
           paramFields: [true, true]
         }}
       />
@@ -108,7 +108,7 @@ const BuyCollection = props => {
     trigger={<Button basic color='green'>Buy Collection</Button>}>
     <Modal.Header>Buy Collection</Modal.Header>
     <Modal.Content><Form>
-      <Form.Input fluid label='Collection ID' readOnly value={colletion.symbol} />
+      <Form.Input fluid label='Collection ID' readOnly value={collection.symbol} />
       <Form.Input fluid label='Price' readOnly value={collection.price} />
     </Form></Modal.Content>
     <Modal.Actions>
@@ -122,7 +122,7 @@ const BuyCollection = props => {
         attrs={{
           palletRpc: 'substrateKitties',
           callable: 'buyCollection',
-          inputParams: [colletion.symbol, collection.price],
+          inputParams: [collection.symbol, collection.price],
           paramFields: [true, true]
         }}
       />
@@ -136,7 +136,7 @@ const CollectionCard = props => {
   const { collection, accountPair, setStatus } = props;
   const { dna = null, owner = null, gender = null, price = null } = collection;
   const displayDna = "dna && dna.toJSON()";
-  const isSelf = accountPair.address === colletion.issuer;
+  const isSelf = accountPair.address === collection.issuer;
 
   return <Card>
     {isSelf && <Label as='a' floating color='teal'>Mine</Label>}
@@ -170,10 +170,10 @@ const CollectionCard = props => {
 };
 
 const CollectionCards = props => {
-  const { colletions, accountPair, setStatus } = props;
+  const { collections, accountPair, setStatus } = props;
 
-  console.log('collectionCards=' + JSON.stringify(colletions));
-  if (colletions == null || colletions.length === 0) {
+  console.log('collectionCards=' + JSON.stringify(collections));
+  if (collections == null || collections.length === 0) {
     return <Message info>
       <Message.Header>No Collection found here... Create one now!&nbsp;
         <span role='img' aria-label='point-down'>👇</span>
@@ -181,7 +181,7 @@ const CollectionCards = props => {
     </Message>;
   }
 
-  return <Grid columns={3}>{colletions.map((collection, i) =>
+  return <Grid columns={3}>{collections.map((collection, i) =>
     <Grid.Column key={`collection-${i}`}>
       <CollectionCard collection={collection} accountPair={accountPair} setStatus={setStatus} />
     </Grid.Column>
