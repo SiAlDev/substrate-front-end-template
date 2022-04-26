@@ -1,6 +1,8 @@
+/* eslint-disable multiline-ternary */
 import React from 'react';
 import { Card, Grid, Message, Label } from 'semantic-ui-react';
 import { DestroyCollectionButton } from './rmrk-function-calls/CollectionButtons';
+import ChangeIssuerModal from './modals/ChangeIssuerModal';
 
 // --- About Collection Card ---
 const CollectionCard = (props) => {
@@ -45,6 +47,11 @@ const CollectionCard = (props) => {
           <>
             <DestroyCollectionButton
               collection={collection}
+              accountPair={accountPair}
+              setStatus={setStatus}
+            />
+            <ChangeIssuerModal
+              collectionId={collectionId}
               accountPair={accountPair}
               setStatus={setStatus}
             />

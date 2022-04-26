@@ -37,6 +37,7 @@ const DestroyCollectionButton = (props) => {
       label="Destroy Collection"
       type="SIGNED-TX"
       setStatus={setStatus}
+      onClick={setStatus}
       attrs={{
         palletRpc: 'rmrkCore',
         callable: 'destroyCollection',
@@ -47,23 +48,24 @@ const DestroyCollectionButton = (props) => {
   );
 };
 
-const ChangeIssuer = (props) => {
-  const { collection, newIssuer, accountPair, setStatus } = props;
+const ChangeIssuerButton = (props) => {
+  const { collectionId, newIssuerAddress, accountPair, setStatus } = props;
 
   return (
     <TxButton
       accountPair={accountPair}
-      label="Destroy Collection"
+      label="Change Issuer"
       type="SIGNED-TX"
       setStatus={setStatus}
+      onClick={setStatus}
       attrs={{
         palletRpc: 'rmrkCore',
         callable: 'changeIssuer',
-        inputParams: [collection.collectionId, newIssuer],
+        inputParams: [collectionId, newIssuerAddress],
         paramFields: [true, true],
       }}
     />
   );
 };
 
-export { CreateCollectionButton, DestroyCollectionButton, ChangeIssuer };
+export { CreateCollectionButton, DestroyCollectionButton, ChangeIssuerButton };

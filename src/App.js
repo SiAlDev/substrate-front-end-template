@@ -1,5 +1,12 @@
 import React, { useState, createRef } from 'react';
-import { Container, Dimmer, Loader, Grid, Sticky, Message } from 'semantic-ui-react';
+import {
+  Container,
+  Dimmer,
+  Loader,
+  Grid,
+  Sticky,
+  Message,
+} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib';
@@ -16,9 +23,9 @@ import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 
-import Rmrk from './Rmrk'
+import Rmrk from './Rmrk';
 
-function Main () {
+function Main() {
   const [accountAddress, setAccountAddress] = useState(null);
   const { apiState, keyring, keyringState, apiError } = useSubstrate();
   const accountPair =
@@ -26,26 +33,33 @@ function Main () {
     keyringState === 'READY' &&
     keyring.getPair(accountAddress);
 
-  const loader = text =>
+  const loader = (text) => (
     <Dimmer active>
-      <Loader size='small'>{text}</Loader>
-    </Dimmer>;
+      <Loader size="small">{text}</Loader>
+    </Dimmer>
+  );
 
-  const message = err =>
+  const message = (err) => (
     <Grid centered columns={2} padded>
       <Grid.Column>
-        <Message negative compact floating
-          header='Error Connecting to Substrate'
+        <Message
+          negative
+          compact
+          floating
+          header="Error Connecting to Substrate"
           content={`${JSON.stringify(err, null, 4)}`}
         />
       </Grid.Column>
-    </Grid>;
+    </Grid>
+  );
 
   if (apiState === 'ERROR') return message(apiError);
   else if (apiState !== 'READY') return loader('Connecting to Substrate');
 
   if (keyringState !== 'READY') {
-    return loader('Loading accounts (please review any extension\'s authorization)');
+    return loader(
+      "Loading accounts (please review any extension's authorization)"
+    );
   }
 
   const contextRef = createRef();
@@ -56,7 +70,7 @@ function Main () {
         <AccountSelector setAccountAddress={setAccountAddress} />
       </Sticky>
       <Container>
-        <Grid stackable columns='equal'>
+        <Grid stackable columns="equal">
           <Grid.Row>
             <Rmrk accountPair={accountPair} />
           </Grid.Row>
@@ -87,7 +101,7 @@ function Main () {
   );
 }
 
-export default function App () {
+export default function App() {
   return (
     <SubstrateContextProvider>
       <Main />

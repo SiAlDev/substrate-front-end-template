@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, Modal, Form } from 'semantic-ui-react';
+import { Grid, Form } from 'semantic-ui-react';
 
 import { useSubstrate } from './substrate-lib';
 import CollectionCards from './CollectionCards';
-import { CreateCollectionButton } from './rmrk-function-calls/CollectionButtons';
+import CreateCollectionModal from './modals/CreateCollectionModal';
 
 const parseCollection = (
   collectionId,
@@ -86,6 +86,8 @@ export default function Collections(props) {
 
   return (
     <Grid.Column width={16}>
+      <h1>Status</h1>
+      <div style={{ overflowWrap: 'break-word' }}>{status}</div>
       <h1>Collections</h1>
       <CollectionCards
         collections={collectionsMapFinal}
@@ -100,71 +102,6 @@ export default function Collections(props) {
           />
         </Form.Field>
       </Form>
-      <div style={{ overflowWrap: 'break-word' }}>{status}</div>
     </Grid.Column>
   );
 }
-
-// --- Create Collection Modal ---
-const CreateCollectionModal = (props) => {
-  const { accountPair, setStatus } = props;
-  const [open, setOpen] = React.useState(false);
-  const [formValue, setFormValue] = React.useState({});
-
-  const formChange = (key) => (ev, el) => {
-    setFormValue({ ...formValue, [key]: el.value });
-  };
-
-  const confirmAndClose = (setStatus) => {
-    setOpen(false);
-    setStatus;
-    // if (unsub && typeof unsub === 'function') unsub();
-  };
-
-  return (
-    <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-      open={open}
-      trigger={
-        <Button basic color="green">
-          Create Collection
-        </Button>
-      }
-    >
-      <Modal.Header>Create Collection</Modal.Header>
-      <Modal.Content>
-        <Form>
-          <Form.Input
-            fluid
-            label="Metadata"
-            placeholder="Metadata"
-            onChange={formChange('metadata')}
-          />
-          <Form.Input
-            fluid
-            label="Max"
-            placeholder="Max"
-            onChange={formChange('max')}
-          />
-          <Form.Input
-            fluid
-            label="Symbol"
-            placeholder="Symbol"
-            onChange={formChange('symbol')}
-          />
-        </Form>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button basic color="grey" onClick={() => setOpen(false)}>
-          Cancel
-        </Button>
-        <CreateCollectionButton
-          newCollectionValues={formValue}
-          accountPair={accountPair}
-          setStatus={confirmAndClose}
-        />
-      </Modal.Actions>
-    </Modal>
-  );
-};
