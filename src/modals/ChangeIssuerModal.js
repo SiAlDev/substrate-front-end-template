@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Modal, Form } from 'semantic-ui-react';
 
 import { ChangeIssuerButton } from '../rmrk-function-calls/CollectionButtons';
@@ -13,9 +13,8 @@ const ChangeIssuer = (props) => {
     setFormValue({ ...formValue, [key]: el.value });
   };
 
-  const confirmAndClose = () => {
-    setOpen(false);
-    // setStatus;
+  const handleClick = () => {
+    console.log('click create collection modal');
   };
 
   return (
@@ -49,7 +48,7 @@ const ChangeIssuer = (props) => {
           newIssuerAddress={formValue.newIssuerAddress}
           accountPair={accountPair}
           setStatus={setStatus}
-          onClick={confirmAndClose}
+          onClick={handleClick}
         />
       </Modal.Actions>
     </Modal>

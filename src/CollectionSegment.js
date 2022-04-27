@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Form } from 'semantic-ui-react';
+import { Segment, Button, Grid, Form } from 'semantic-ui-react';
 
 import { useSubstrate } from './substrate-lib';
 import CollectionCards from './CollectionCards';
@@ -18,27 +18,22 @@ const parseCollection = (
   nftsCount: nftsCount.toJSON(),
 });
 
-export default function Collections(props) {
+export default function CollectionSegment(props) {
   const { api, keyring } = useSubstrate();
   const { accountPair } = props;
 
   const [collectionIds, setCollectionIds] = useState([]);
   const [collectionsMapFinal, setCollectionsMapFinal] = useState([]);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('No current transction');
 
   const subscribeCountCollections = () => {
     let unsub = null;
 
     const asyncFetch = async () => {
       unsub = await api.query.rmrkCore.collectionIndex(async (count) => {
-        //Fetch all collection keys
-        console.log(
-          'A--> ' + JSON.stringify(await api.query.rmrkCore.collections)
-        );
         const entries = await api.query.rmrkCore.collections.entries();
         const ids = entries.map((entry) => entry[0].args.toString());
         console.log('updated ids: ' + ids);
-
         setCollectionIds(ids);
       });
     };
@@ -57,11 +52,6 @@ export default function Collections(props) {
       console.log('collectionIds=' + collectionIds);
 
       unsub = await api.query.rmrkCore.collections.entries((collections) => {
-        console.log(
-          'after await, in  -- StorageEntryPromiseMulti, collections=' +
-            JSON.stringify(collections.value)
-        );
-
         if (collections.length != 0) {
           const collectionsMap = collections.map((collection) =>
             parseCollection(
@@ -88,12 +78,15 @@ export default function Collections(props) {
     <Grid.Column width={16}>
       <h1>Status</h1>
       <div style={{ overflowWrap: 'break-word' }}>{status}</div>
-      <h1>Collections</h1>
-      <CollectionCards
-        collections={collectionsMapFinal}
-        accountPair={accountPair}
-        setStatus={setStatus}
+      <Button
+        basic
+        circular
+        size="mini"
+        color="grey"
+        floated="right"
+        icon="refresh"
       />
+      <h1>Collections</h1>
       <Form style={{ margin: '1em 0' }}>
         <Form.Field style={{ textAlign: 'center' }}>
           <CreateCollectionModal
@@ -102,6 +95,13 @@ export default function Collections(props) {
           />
         </Form.Field>
       </Form>
+      <Segment style={{ overflow: 'auto', maxHeight: 400 }}>
+        <CollectionCards
+          collections={collectionsMapFinal}
+          accountPair={accountPair}
+          setStatus={setStatus}
+        />
+      </Segment>
     </Grid.Column>
   );
 }

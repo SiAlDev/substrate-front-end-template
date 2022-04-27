@@ -3,6 +3,9 @@ import { TxButton } from '../substrate-lib/components';
 
 const CreateCollectionButton = (props) => {
   const { newCollectionValues, accountPair, setStatus } = props;
+  const handleClick = () => {
+    console.log('click create collection modal');
+  };
 
   return (
     <TxButton
@@ -10,7 +13,7 @@ const CreateCollectionButton = (props) => {
       label="Create Collection"
       type="SIGNED-TX"
       setStatus={setStatus}
-      onClick={setStatus}
+      onClick={handleClick}
       attrs={{
         palletRpc: 'rmrkCore',
         callable: 'createCollection',
@@ -30,6 +33,9 @@ const CreateCollectionButton = (props) => {
 
 const DestroyCollectionButton = (props) => {
   const { collection, accountPair, setStatus } = props;
+  const handleClick = () => {
+    console.log('click create collection modal');
+  };
 
   return (
     <TxButton
@@ -37,7 +43,7 @@ const DestroyCollectionButton = (props) => {
       label="Destroy Collection"
       type="SIGNED-TX"
       setStatus={setStatus}
-      onClick={setStatus}
+      onClick={handleClick}
       attrs={{
         palletRpc: 'rmrkCore',
         callable: 'destroyCollection',
@@ -50,6 +56,9 @@ const DestroyCollectionButton = (props) => {
 
 const ChangeIssuerButton = (props) => {
   const { collectionId, newIssuerAddress, accountPair, setStatus } = props;
+  const handleClick = () => {
+    console.log('click create collection modal');
+  };
 
   return (
     <TxButton
@@ -57,7 +66,7 @@ const ChangeIssuerButton = (props) => {
       label="Change Issuer"
       type="SIGNED-TX"
       setStatus={setStatus}
-      onClick={setStatus}
+      onClick={handleClick}
       attrs={{
         palletRpc: 'rmrkCore',
         callable: 'changeIssuer',

@@ -13,6 +13,10 @@ const CreateCollectionModal = (props) => {
     setFormValue({ ...formValue, [key]: el.value });
   };
 
+  const handleClick = () => {
+    console.log('click create collection modal');
+  };
+
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -55,6 +59,7 @@ const CreateCollectionModal = (props) => {
           newCollectionValues={formValue}
           accountPair={accountPair}
           setStatus={setStatus}
+          onClick={handleClick}
         />
       </Modal.Actions>
     </Modal>

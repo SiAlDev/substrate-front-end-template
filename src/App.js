@@ -23,7 +23,7 @@ import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 
-import Rmrk from './Rmrk';
+import CollectionSegment from './CollectionSegment';
 
 function Main() {
   const [accountAddress, setAccountAddress] = useState(null);
@@ -72,7 +72,8 @@ function Main() {
       <Container>
         <Grid stackable columns="equal">
           <Grid.Row>
-            <Rmrk accountPair={accountPair} />
+            <Events />
+            <CollectionSegment accountPair={accountPair} />
           </Grid.Row>
           <Grid.Row stretched>
             <NodeInfo />
@@ -89,7 +90,6 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <Interactor accountPair={accountPair} />
-            <Events />
           </Grid.Row>
           <Grid.Row>
             <TemplateModule accountPair={accountPair} />

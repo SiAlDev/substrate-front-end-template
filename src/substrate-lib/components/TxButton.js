@@ -64,14 +64,28 @@ function TxButton({
 
   const txResHandler = ({ status }) => {
     if (status.isFinalized) {
-      setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`);
+      setStatus(
+        palletRpc +
+          ' - ' +
+          callable +
+          ' -> Finalized. Block hash:' +
+          status.asFinalized.toString()
+      );
     } else {
-      setStatus(`Current transaction status: ${status.type}`);
+      setStatus(
+        palletRpc +
+          ' - ' +
+          callable +
+          ' -> Current transaction status: ' +
+          status.type
+      );
     }
   };
 
   const txErrHandler = (err) =>
-    setStatus(`😞 Transaction Failed: ${err.toString()}`);
+    setStatus(
+      palletRpc + ' - ' + callable + ' -> Transaction Failed: ' + err.toString()
+    );
 
   const sudoTx = async () => {
     const fromAcct = await getFromAcct();
@@ -127,7 +141,9 @@ function TxButton({
   };
 
   const queryResHandler = (result) =>
-    result.isNone ? setStatus('None') : setStatus(result.toString());
+    result.isNone
+      ? setStatus('None')
+      : setStatus(palletRpc + ' - ' + callable + ' -> ' + result.toString());
 
   const query = async () => {
     const transformed = transformParams(paramFields, inputParams);
@@ -151,7 +167,9 @@ function TxButton({
 
   const constant = () => {
     const result = api.consts[palletRpc][callable];
-    result.isNone ? setStatus('None') : setStatus(result.toString());
+    result.isNone
+      ? setStatus('None')
+      : setStatus(palletRpc + ' - ' + callable + ' -> ' + result.toString());
   };
 
   const transaction = async () => {
@@ -160,7 +178,7 @@ function TxButton({
       setUnsub(null);
     }
 
-    setStatus('Sending...');
+    setStatus(palletRpc + ' - ' + callable + ' -> Sending...');
 
     (isSudo() && sudoTx()) ||
       (isUncheckedSudo() && uncheckedSudoTx()) ||
