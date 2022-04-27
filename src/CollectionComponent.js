@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Segment, Button, Grid, Form } from 'semantic-ui-react';
 
 import { useSubstrate } from './substrate-lib';
-import CollectionCards from './CollectionCards';
 import CreateCollectionModal from './modals/CreateCollectionModal';
+import CollectionList from './CollectionList';
 
 const parseCollection = (
   collectionId,
@@ -18,7 +18,7 @@ const parseCollection = (
   nftsCount: nftsCount.toJSON(),
 });
 
-export default function CollectionSegment(props) {
+export default function CollectionComponent(props) {
   const { api, keyring } = useSubstrate();
   const { accountPair } = props;
 
@@ -96,7 +96,7 @@ export default function CollectionSegment(props) {
         </Form.Field>
       </Form>
       <Segment style={{ overflow: 'auto', maxHeight: 400 }}>
-        <CollectionCards
+        <CollectionList
           collections={collectionsMapFinal}
           accountPair={accountPair}
           setStatus={setStatus}

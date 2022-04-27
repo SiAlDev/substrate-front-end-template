@@ -1,6 +1,4 @@
-/* eslint-disable multiline-ternary */
-import React from 'react';
-import { Card, Grid, Message, Label } from 'semantic-ui-react';
+import { Card, Label } from 'semantic-ui-react';
 import { DestroyCollectionButton } from './rmrk-function-calls/CollectionButtons';
 import ChangeIssuerModal from './modals/ChangeIssuerModal';
 
@@ -68,36 +66,4 @@ const CollectionCard = (props) => {
   );
 };
 
-const CollectionCards = (props) => {
-  const { collections, accountPair, setStatus } = props;
-
-  console.log('collectionCards=' + JSON.stringify(collections));
-  if (collections == null || collections.length === 0) {
-    return (
-      <Message info>
-        <Message.Header>
-          No Collection found here... Create one now!&nbsp;
-          <span role="img" aria-label="point-down">
-            👇
-          </span>
-        </Message.Header>
-      </Message>
-    );
-  }
-
-  return (
-    <Grid columns={3}>
-      {collections.map((collection, i) => (
-        <Grid.Column key={`collection-${i}`}>
-          <CollectionCard
-            collection={collection}
-            accountPair={accountPair}
-            setStatus={setStatus}
-          />
-        </Grid.Column>
-      ))}
-    </Grid>
-  );
-};
-
-export default CollectionCards;
+export default CollectionCard;

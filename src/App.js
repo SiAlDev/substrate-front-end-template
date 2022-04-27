@@ -23,7 +23,7 @@ import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 
-import CollectionSegment from './CollectionSegment';
+import CollectionComponent from './CollectionComponent';
 
 function Main() {
   const [accountAddress, setAccountAddress] = useState(null);
@@ -73,7 +73,7 @@ function Main() {
         <Grid stackable columns="equal">
           <Grid.Row>
             <Events />
-            <CollectionSegment accountPair={accountPair} />
+            <CollectionComponent accountPair={accountPair} />
           </Grid.Row>
           <Grid.Row stretched>
             <NodeInfo />
